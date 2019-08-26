@@ -63,7 +63,7 @@ $config = [
      * root directory.
      */
     'certdir' => 'cert/',
-    'loggingdir' => 'log/',
+    'loggingdir' => '/var/log/saml',
     'datadir' => 'data/',
     'tempdir' => '/tmp/simplesaml',
 
@@ -89,7 +89,7 @@ $config = [
      *
      * See this page for a list of valid timezones: http://php.net/manual/en/timezones.php
      */
-    'timezone' => null,
+    'timezone' => 'Europe/Rome',
 
 
 
@@ -119,8 +119,8 @@ $config = [
      * Set this options to true if you want to require administrator password to access the web interface
      * or the metadata pages, respectively.
      */
-    'admin.protectindexpage' => false,
-    'admin.protectmetadata' => false,
+    'admin.protectindexpage' => true,
+    'admin.protectmetadata' => true,
 
     /*
      * Set this option to false if you don't want SimpleSAMLphp to check for new stable releases when
@@ -226,7 +226,7 @@ $config = [
      */
     'debug' => [
         'saml' => false,
-        'backtraces' => true,
+        'backtraces' => false,
         'validatexml' => false,
     ],
 
@@ -237,7 +237,8 @@ $config = [
      * When 'errorreporting' is enabled, a form will be presented for the user to report
      * the error to 'technicalcontact_email'.
      */
-    'showerrors' => true,
+    'showerr
+    ors' => true,
     'errorreporting' => true,
 
     /*
@@ -267,8 +268,8 @@ $config = [
      * Options: [syslog,file,errorlog]
      *
      */
-    'logging.level' => SimpleSAML\Logger::NOTICE,
-    'logging.handler' => 'syslog',
+    'logging.level' => SimpleSAML\Logger::DEBUG,
+    'logging.handler' => 'file',
 
     /*
      * Specify the format of the logs. Its use varies depending on the log handler used (for instance, you cannot
@@ -436,7 +437,7 @@ $config = [
      * one of the functionalities below, but in some cases you could run multiple functionalities.
      * In example when you are setting up a federation bridge.
      */
-    'enable.saml20-idp' => false,
+    'enable.saml20-idp' => true,
     'enable.shib13-idp' => false,
     'enable.adfs-idp' => false,
     'enable.wsfed-sp' => false,
@@ -469,7 +470,10 @@ $config = [
      * Example:
      *
      * 'module.enable' => [
-     *      'exampleauth' => true, // Setting to TRUE enables.
+     *
+     *
+     *
+     * 'exampleauth' => true, // Setting to TRUE enables.
      *      'saml' => false, // Setting to FALSE disables.
      *      'core' => null, // Unset or NULL uses default.
      * ],
@@ -731,7 +735,7 @@ $config = [
         'et', 'he', 'id', 'sr', 'lv', 'ro', 'eu', 'el', 'af', 'zu', 'xh',
     ],
     'language.rtl' => ['ar', 'dv', 'fa', 'ur', 'he'],
-    'language.default' => 'en',
+    'language.default' => 'it',
 
     /*
      * Options to override the default settings for the language parameter
