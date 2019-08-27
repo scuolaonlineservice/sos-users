@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    restart: always
+    ports:
+    - 80:80
+    tty: true
+    volumes:
+    - ./logs/nginx:/var/log/nginx
+    - ./logs/saml:/var/log/saml
+    - ./cert:/var/simplesamlphp/cert
+    - ./simplesamlphp/modules/joomlamodule:/var/simplesamlphp/modules/joomlamodule
+    depends_on:
+    - db
+    environment:
+      SITE_NAME: ${SITE_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DB_NAME: ${MYSQL_DB_NAME}
+      MYSQL_DB_HOST: ${MYSQL_DB_HOST}
+
+  db:
+    image: mysql:5.7
+    command: mysqld
+    restart: always
+    hostname: ${MYSQL_DB_HOST}
+    domainname: ${MYSQL_DB_HOST}
+    container_name: sample-scuola-ssphp-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DB_NAME: ${MYSQL_DB_NAME}
+    tty: true
