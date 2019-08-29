@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-class HelloWorldController extends JControllerLegacy {
+class SOSUsersController extends JControllerLegacy {
   function verify_token() {
     $app = JFactory::getApplication();
     $db = JFactory::getDbo();
@@ -18,7 +18,7 @@ class HelloWorldController extends JControllerLegacy {
     $db->setQuery($query);
     $result = $db->execute();
 
-    if (getAffectedRows($result) === 0) {
+    if ($db->getAffectedRows($result) === 0) {
       die(json_encode([
         'message' => 'Token is incorrect.',
         'statusCode' => 403,
@@ -30,7 +30,7 @@ class HelloWorldController extends JControllerLegacy {
     $query
       ->select('user_id')
       ->from($db->quoteName('#__LoginTokens'))
-      ->where($db->quoteName('token').' = '.$db->quote($token));
+      ->where($db->quoteName('token').' = '.$token);
 
     $db->setQuery($query);
     $user_id = $db->loadResult();
@@ -45,3 +45,5 @@ class HelloWorldController extends JControllerLegacy {
     ]));
   }
 }
+//TODO add logout
+//TODO add google sync
