@@ -1,39 +1,38 @@
 <?php
 defined('_JEXEC') or die;
 
-class Response{
-  public $statusCode = 200;
-  public $errorMessage = null;
-  public $result = null;
+function create_user(&$service, $email, $full_name, $password = null, $id = null) {
+  $id = ($id === 0) ? null : $id;
+  $name = explode(" ", $full_name, 2)[0];
+  $surname = explode(" ", $full_name, 2)[1];
 
-  public function getStatusCode()
-  {
-    return $this->statusCode;
-  }
-}
-
-function action($service, $email, $givenName = '', $familyName = '', $password = '', $id = null) {
   $user = new Google_Service_Directory_User();
-  if($id != null) {
-    $user->setId($id);
-  }
+  $app = JFactory::getApplication();
 
-  $user->setPrimaryEmail($email);
-  //die(var_dump($user));
   $username = new Google_Service_Directory_UserName();
-  $username->givenName = $givenName;
-  $username->familyName = $familyName;
-  $username->fullName = $givenName . " " . $familyName;
-  $user->setName($username);
+  $username->givenName = $name;
+  $username->familyName = $surname;
+  $username->fullName = $full_name;
 
+  $user->setId($id);
+  $user->setPrimaryEmail($email);
+  $user->setName($username);
   $user->setPassword($password);
 
-  $response = new Response();
-  try{
-    $response = $service->users->insert($user);
-  } catch (Google_Service_Exception $googleServiceException) {
-    die($googleServiceException);
+  try {
+    $service->users->insert($user);
+  } catch (Google_Service_Exception $error) {
+    switch ($error->getCode()) {
+      case 403:
+        throw new Exception('Impossibile creare l\'utente. Controlla di aver inserito un indirizzo email corretto.', 403);
+        break;
+      default:
+        throw new Exception('Errore. Se l\'errore persiste contatta un amministratore.', 400);
+        break;
+        //TODO finish error handling
+    }
   }
-  //die(var_dump($response));
-  die();
+
+  $app->enqueueMessage('Utente Google creato con successo.', 'message');
+  //TODO test multiple users deleted at the same time
 }
