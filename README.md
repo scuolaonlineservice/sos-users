@@ -68,3 +68,4 @@ Configurare le variabili d'ambiente del container:
   8. Avviare i container con `$ docker-compose up`
   9. Per ulteriori informazioni, consultare: https://simplesamlphp.org/docs/stable/simplesamlphp-googleapps
 
+//TODO docu plg_googlesync

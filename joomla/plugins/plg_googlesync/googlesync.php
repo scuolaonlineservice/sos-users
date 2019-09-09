@@ -23,22 +23,21 @@ class plgUserGoogleSync extends JPlugin {
 
     require __DIR__.'/helpers/create-user.php';
     require __DIR__.'/helpers/delete-user.php';
-    //require __DIR__.'/helpers/add-user-to-groups.php';
-    //require __DIR__.'/helpers/remove-user-to-groups.php';
+    //require __DIR__.'/helpers/add-user-to-groups.php'; //TODO
+    //require __DIR__.'/helpers/remove-user-to-groups.php'; //TODO
   }
 
   function onUserBeforeSave($old_user, $is_new, $new_user) {
     if ($is_new) {
       create_user($this->service, $new_user['email'], $new_user['name'], $new_user['password_clear'], $new_user['id']);
-      //add_user_to_groups($this->client, );
+      //add_user_to_groups($this->client, ); //TODO
     } else {
-      //patch
+      //TODO patch user and groups
     }
 
 	}
 
   function onUserBeforeDelete($user) {
-    //die(var_dump($user));
     delete_user($this->service, $user['email']);
   }
 }
