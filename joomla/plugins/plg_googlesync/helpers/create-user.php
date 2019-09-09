@@ -1,39 +1,27 @@
 <?php
 defined('_JEXEC') or die;
 
-class Response{
-  public $statusCode = 200;
-  public $errorMessage = null;
-  public $result = null;
-
-  public function getStatusCode()
-  {
-    return $this->statusCode;
-  }
-}
-
-function action($service, $email, $givenName = '', $familyName = '', $password = '', $id = null) {
+function create_user(&$service, $email, $full_name, $password = null, $id = null) {
+  $id = ($id === 0) ? null : $id;
   $user = new Google_Service_Directory_User();
-  if($id != null) {
-    $user->setId($id);
-  }
 
-  $user->setPrimaryEmail($email);
-  //die(var_dump($user));
+  $name = explode(" ", $full_name, 2)[0];
+  $surname = explode(" ", $full_name, 2)[1];
+
   $username = new Google_Service_Directory_UserName();
-  $username->givenName = $givenName;
-  $username->familyName = $familyName;
-  $username->fullName = $givenName . " " . $familyName;
-  $user->setName($username);
+  $username->givenName = $name;
+  $username->familyName = $surname;
+  $username->fullName = $full_name;
 
+  $user->setId($id);
+  $user->setPrimaryEmail($email);
+  $user->setName($username);
   $user->setPassword($password);
 
-  $response = new Response();
-  try{
+  try {
     $response = $service->users->insert($user);
   } catch (Google_Service_Exception $googleServiceException) {
     die($googleServiceException);
   }
-  //die(var_dump($response));
-  die();
+  return $response;
 }
