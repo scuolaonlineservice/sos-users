@@ -1,10 +1,7 @@
 <?php
 defined('_JEXEC') or die;
 
-function patch_user(&$service, $old_email, $new_email, $full_name, $password = null){
-  $first_name = explode(" ", $full_name, 2)[0];
-  $family_name = explode(" ", $full_name, 2)[1];
-
+function patch_user(&$service, $old_email, $new_email, $first_name, $family_name, $password = null){
   $user = new Google_Service_Directory_User();
   $app = JFactory::getApplication();
 
@@ -16,7 +13,7 @@ function patch_user(&$service, $old_email, $new_email, $full_name, $password = n
   $user->setId($id);
   $user->setPrimaryEmail($new_email);
   $user->setName($username);
-  $user->setPassword($password);
+  $user->setPassword($password === '' ? null : $password);
 
   try {
       $service->users->update($old_email, $user);
