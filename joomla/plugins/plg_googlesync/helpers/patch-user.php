@@ -19,8 +19,8 @@ function patch_user(&$service, $old_email, $new_email, $full_name, $password = n
   $user->setPassword($password);
 
   try {
-      $response = $service->users->update($old_email, $user);
-  } catch (Google_Service_Exception $error){
+      $service->users->update($old_email, $user);
+  } catch (Google_Service_Exception $error) {
     switch ($error->getCode()) {
       case 403:
         throw new Exception('Impossibile creare l\'utente. Controlla di aver inserito un indirizzo email corretto.', 403); //TODO lingua
