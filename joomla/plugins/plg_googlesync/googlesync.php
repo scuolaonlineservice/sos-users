@@ -35,6 +35,19 @@ class plgUserGoogleSync extends JPlugin {
     //require __DIR__.'/helpers/remove-user-from-groups.php'; //TODO
   }
 
+  function get_group_title_by_id($id) {
+    $db = JFactory::getDbo();
+    $query = $db->getQuery(true);
+
+    $query
+      ->select('title')
+      ->from($db->quoteName('#__usergroups'))
+      ->where($db->quoteName('id').' = '.$db->quote($id));
+
+    $db->setQuery($query);
+    return $db->loadObject()->title;
+  }
+
   function onUserBeforeSave($old_user, $is_new, $new_user) {
     if ($is_new) { //TODO check empty password and empty name fields
       create_user($this->service, $new_user['email'], $new_user['name'], $new_user['password_clear'], $new_user['id']);
@@ -64,18 +77,8 @@ class plgUserGoogleSync extends JPlugin {
     if ($is_new) {
       create_group($this->service, $name, $email.'@liceoariostospallanzani-re.edu.it'); //TODO test and config
     } else {
-      $db = JFactory::getDbo();
-      $query = $db->getQuery(true);
-
-      $query
-        ->select('title')
-        ->from($db->quoteName('#__usergroups'))
-        ->where($db->quoteName('id').' = '.$db->quote($group['id']));
-
-      $db->setQuery($query);
-      $result = $db->loadObject();
-
-      $old_email = explode('@', $result->title, 2)[1];
+      $old_title = $this->get_group_title_by_id($group['id']);
+      $old_email = explode('@', $old_title, 2)[1];
 
       if (!isset($old_email) || $old_email === '') {
         throw new Exception('Impossibile aggiungere mail ad un gruppo già esistente.'); //TODO lingua
