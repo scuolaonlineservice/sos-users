@@ -15,7 +15,7 @@ function create_user(&$service, $email, $first_name, $family_name, $password, $i
   $user->setId($id);
   $user->setPrimaryEmail($email);
   $user->setName($username);
-  $user->setPassword($password);
+  $user->setPassword($password === '' ? null : $password);
 
   try {
     $service->users->insert($user);

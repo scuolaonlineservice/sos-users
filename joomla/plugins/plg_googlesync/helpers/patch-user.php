@@ -13,7 +13,7 @@ function patch_user(&$service, $old_email, $new_email, $first_name, $family_name
   $user->setId($id);
   $user->setPrimaryEmail($new_email);
   $user->setName($username);
-  $user->setPassword($password);
+  $user->setPassword($password === '' ? null : $password);
 
   try {
       $service->users->update($old_email, $user);

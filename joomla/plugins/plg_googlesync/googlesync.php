@@ -31,11 +31,11 @@ class plgUserGoogleSync extends JPlugin {
     require __DIR__.'/helpers/create-group.php';
     require __DIR__.'/helpers/patch-group.php';
     require __DIR__.'/helpers/delete-group.php';
-    //require __DIR__.'/helpers/add-user-to-groups.php'; //TODO
-    //require __DIR__.'/helpers/remove-user-from-groups.php'; //TODO
+    require __DIR__.'/helpers/add-user-to-groups.php';
+    require __DIR__.'/helpers/remove-user-from-groups.php';
   }
 
-  function get_group_title_by_id($id) {
+  function get_group_email_by_id($id) {
     $db = JFactory::getDbo();
     $query = $db->getQuery(true);
 
@@ -44,8 +44,12 @@ class plgUserGoogleSync extends JPlugin {
       ->from($db->quoteName('#__usergroups'))
       ->where($db->quoteName('id').' = '.$db->quote($id));
 
-    $db->setQuery($query);
-    return $db->loadObject()->title;
+    try {
+      $db->setQuery($query);
+      return explode('@', $db->loadObject()->title, 2)[1];
+    } catch (Exception $_) {
+      return null;
+    }
   }
 
   function onUserBeforeSave($old_user, $is_new, $new_user) {
@@ -53,18 +57,59 @@ class plgUserGoogleSync extends JPlugin {
     $family_name = explode(" ", $new_user['name'], 2)[1];
 
     if (!$first_name || !$family_name) {
-      throw new Exception('L\'utente deve possedere nome e cognome, separati da virgola', 403); //TODO lingua
+      throw new Exception('L\'utente deve possedere nome e cognome, separati da spazio', 403); //TODO lingua
     }
-    if (strlen($new_user['password_clear']) < 8) {
+    if ($new_user['password_clear'] && strlen($new_user['password_clear']) < 8) {
       throw new Exception('La password deve contenere almeno otto caratteri.', 403); //TODO lingua
     }
 
     if ($is_new) {
       create_user($this->service, $new_user['email'], $first_name, $family_name, $new_user['password_clear'], $new_user['id']);
-      //todo add_user_to_groups($this->client, );
+
+      $groups = [];
+      foreach ($new_user['groups'] as $group_id) {
+        $group_email = $this->get_group_email_by_id($group_id);
+        if ($group_email) {
+          array_push($groups, $group_email.'@liceoariostospallanzani-re.edu.it'); //TODO domain
+        }
+      }
+
+      add_user_to_groups($this->service, $new_user['email'], $groups);
     } else {
       patch_user($this->service, $old_user['email'], $new_user['email'], $first_name, $family_name, $new_user['password_clear']);
-      //TODO patch user groups
+
+      $new_groups = [];
+      foreach ($new_user['groups'] as $group_id) {
+        $group_email = $this->get_group_email_by_id($group_id);
+        if ($group_email) {
+          array_push($new_groups, $group_email); //TODO domain
+        }
+      }
+
+      $old_groups = [];
+      foreach ($old_user['groups'] as $group_id) {
+        $group_email = $this->get_group_email_by_id($group_id);
+        if ($group_email) {
+          array_push($old_groups, $group_email); //TODO domain
+        }
+      }
+
+      $groups_to_join = [];
+      foreach ($new_groups as $group_email) {
+        if (!in_array($group_email, $old_groups)) {
+          array_push($groups_to_join, $group_email.'@liceoariostospallanzani-re.edu.it'); //TODO domain
+        }
+      }
+
+      $groups_to_leave = [];
+      foreach ($old_groups as $group_email) {
+        if (!in_array($group_email, $new_groups)) {
+          array_push($groups_to_leave, $group_email.'@liceoariostospallanzani-re.edu.it'); //TODO domain
+        }
+      }
+
+      add_user_to_groups($this->service, $new_user['email'], $groups_to_join);
+      remove_user_from_groups($this->service, $new_user['email'], $groups_to_leave);
     }
 	}
 
@@ -87,8 +132,7 @@ class plgUserGoogleSync extends JPlugin {
     if ($is_new) {
       create_group($this->service, $name, $email.'@liceoariostospallanzani-re.edu.it'); //TODO config
     } else {
-      $old_title = $this->get_group_title_by_id($group['id']);
-      $old_email = explode('@', $old_title, 2)[1];
+      $old_email = $this->get_group_email_by_id($group['id']);
 
       if (!$old_email) {
         throw new Exception('Impossibile aggiungere mail ad un gruppo già esistente.'); //TODO lingua
