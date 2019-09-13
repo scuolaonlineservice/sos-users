@@ -16,7 +16,7 @@ function delete_group(&$service, $group_mail) {
         break;
     }
 
-    $app->redirect(JRoute::_('index.php?option=com_users&amp;view=groups'));
+    $app->redirect(JRoute::_('index.php?option=com_users&view=groups'), false);
   }
 
   $app->enqueueMessage('Gruppo Google rimosso con successo.', 'message'); //TODO language

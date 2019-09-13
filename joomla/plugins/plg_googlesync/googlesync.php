@@ -19,7 +19,7 @@ class plgUserGoogleSync extends JPlugin {
     $client = new Google_Client();
     $client->setSubject('admin@liceoariostospallanzani-re.edu.it'); //todo config
     $client->setScopes(SCOPES);
-    $client->setAuthConfig(JPATH_ROOT.'/plugins/user/googlesync/credentials.json'); //TODO insert credentials
+    $client->setAuthConfig(JPATH_ROOT.'/plugins/user/googlesync/credentials.json'); //TODO config
 
     $this->client = $client;
     $this->service = new Google_Service_Directory($this->client);
@@ -49,11 +49,21 @@ class plgUserGoogleSync extends JPlugin {
   }
 
   function onUserBeforeSave($old_user, $is_new, $new_user) {
-    if ($is_new) { //TODO check empty password and empty name fields
-      create_user($this->service, $new_user['email'], $new_user['name'], $new_user['password_clear'], $new_user['id']);
+    $first_name = explode(" ", $new_user['name'], 2)[0];
+    $family_name = explode(" ", $new_user['name'], 2)[1];
+
+    if (!$first_name || !$family_name) {
+      throw new Exception('L\'utente deve possedere nome e cognome, separati da virgola', 403); //TODO lingua
+    }
+    if (strlen($new_user['password_clear']) < 8) {
+      throw new Exception('La password deve contenere almeno otto caratteri.', 403); //TODO lingua
+    }
+
+    if ($is_new) {
+      create_user($this->service, $new_user['email'], $first_name, $family_name, $new_user['password_clear'], $new_user['id']);
       //todo add_user_to_groups($this->client, );
     } else {
-      patch_user($this->service, $old_user['email'], $new_user['email'], $new_user['name'], $new_user['password_clear']);
+      patch_user($this->service, $old_user['email'], $new_user['email'], $first_name, $family_name, $new_user['password_clear']);
       //TODO patch user groups
     }
 	}
@@ -66,32 +76,32 @@ class plgUserGoogleSync extends JPlugin {
     $name = explode('@', $group['title'], 2)[0];
     $email = explode('@', $group['title'], 2)[1];
 
-    if (!isset($name) || $name === '') {
+    if (!$name) {
       throw new Exception('Perfavore, assegna un nome al gruppo.');//TODO lingua
     }
-    if (!isset($email) || $email === '') {
+    if (!$email) {
       $this->app->enqueueMessage('Nessuna mail inserita. Il gruppo Google non verrà creato.', 'warning'); //TODO language
       return;
     }
 
     if ($is_new) {
-      create_group($this->service, $name, $email.'@liceoariostospallanzani-re.edu.it'); //TODO test and config
+      create_group($this->service, $name, $email.'@liceoariostospallanzani-re.edu.it'); //TODO config
     } else {
       $old_title = $this->get_group_title_by_id($group['id']);
       $old_email = explode('@', $old_title, 2)[1];
 
-      if (!isset($old_email) || $old_email === '') {
+      if (!$old_email) {
         throw new Exception('Impossibile aggiungere mail ad un gruppo già esistente.'); //TODO lingua
       }
 
-      patch_group($this->service, $old_email.'@liceoariostospallanzani-re.edu.it', $name, $email.'@liceoariostospallanzani-re.edu.it'); //TODO test and config
+      patch_group($this->service, $old_email.'@liceoariostospallanzani-re.edu.it', $name, $email.'@liceoariostospallanzani-re.edu.it'); //TODO config
     }
   }
 
   function onUserBeforeDeleteGroup($group) {
     $group_email = explode('@', $group['title'], 2)[1];
 
-    if (!isset($group_email) || $group_email === '') {
+    if (!$group_email) {
       $this->app->enqueueMessage('Gruppo non presente su Google.', 'notice'); //TODO language
       return;
     }

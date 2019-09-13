@@ -1,10 +1,8 @@
 <?php
 defined('_JEXEC') or die;
 
-function create_user(&$service, $email, $full_name, $password = null, $id = null) {
+function create_user(&$service, $email, $first_name, $family_name, $password, $id = null) {
   $id = ($id === 0) ? null : $id;
-  $first_name = explode(" ", $full_name, 2)[0];
-  $family_name = explode(" ", $full_name, 2)[1];
 
   $user = new Google_Service_Directory_User();
   $app = JFactory::getApplication();
@@ -39,4 +37,5 @@ function create_user(&$service, $email, $full_name, $password = null, $id = null
   }
 
   $app->enqueueMessage('Utente Google creato con successo.', 'message'); //TODO Language
+  $app->enqueueMessage('La password dell\'utente è: '.$password, 'notice'); //TODO Language
 }
