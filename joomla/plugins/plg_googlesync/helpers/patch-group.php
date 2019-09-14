@@ -13,16 +13,28 @@ function patch_group(&$service, $old_email, $new_name, $new_email) {
   } catch (Google_Service_Exception $error){
     switch ($error->getCode()) {
       case 403:
-        throw new Exception('Impossibile modificare il gruppo. Controlla di aver inserito un indirizzo email corretto.', 403); //TODO lingua
+        throw new Exception(
+          'Impossibile modificare il gruppo. Controlla di aver inserito un indirizzo email corretto.',
+          403
+        );
         break;
       case 400:
-        throw new Exception('Errore nei dati inseriti.', 400);//TODO lingua
+        throw new Exception(
+          'Errore nei dati inseriti.',
+          400
+        );
         break;
       default:
-        throw new Exception('Errore. Se l\'errore persiste contatta un amministratore.', 400); //TODO lingua
+        throw new Exception(
+          'Google Sync: Errore. Se l\'errore persiste contatta un amministratore.',
+          400
+        );
         break;
     }
   }
 
-  $app->enqueueMessage('Gruppo Google modificato con successo.', 'message'); //TODO Language
+  $app->enqueueMessage(
+    'Google Sync: Gruppo Google modificato con successo.',
+    'message'
+  );
 }

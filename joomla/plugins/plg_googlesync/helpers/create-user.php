@@ -22,20 +22,38 @@ function create_user(&$service, $email, $first_name, $family_name, $password, $i
   } catch (Google_Service_Exception $error) {
     switch ($error->getCode()) {
       case 403:
-        throw new Exception('Impossibile creare l\'utente. Controlla di aver inserito un indirizzo email corretto.', 403); //TODO lingua
+        throw new Exception(
+          'Google Sync: Impossibile creare l\'utente. Controlla di aver inserito un indirizzo email corretto.',
+          403
+        );
         break;
       case 409:
-        throw new Exception('Utente già esistente.', 409);//TODO lingua
+        throw new Exception(
+          'Google Sync: Utente già esistente.',
+          409
+        );
         break;
       case 400:
-        throw new Exception('Errore nei dati inseriti.', 400);//TODO lingua
+        throw new Exception(
+          'Google Sync: Errore nei dati inseriti. Controlla la configurazione del plugin "SOS Google Sync"',
+          400
+        );
         break;
       default:
-        throw new Exception('Errore. Se l\'errore persiste contatta un amministratore.', 400); //TODO lingua
+        throw new Exception(
+          'Google Sync: Errore. Se l\'errore persiste contatta un amministratore.',
+          400
+        );
         break;
     }
   }
 
-  $app->enqueueMessage('Utente Google creato con successo.', 'message'); //TODO Language
-  $app->enqueueMessage('La password dell\'utente è: '.$password, 'notice'); //TODO Language
+  $app->enqueueMessage(
+    'Google Sync: Utente Google creato con successo.',
+    'message'
+  );
+  $app->enqueueMessage(
+    'Google Sync: La password dell\'utente è: '.$password,
+    'notice'
+  );
 }

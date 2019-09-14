@@ -13,16 +13,28 @@ function create_group(&$service, $name, $email) {
   } catch (Google_Service_Exception $error) {
     switch ($error->getCode()) {
       case 409:
-        throw new Exception('Google: Gruppo già esistente.', 409);//TODO lingua
+        throw new Exception(
+          'Google Sync: Gruppo già esistente.',
+          409
+        );
         break;
       case 400:
-        throw new Exception('Google: Errore nei dati inseriti.', 400);//TODO lingua
+        throw new Exception(
+          'Google Sync: Errore nei dati inseriti. Controlla la configurazione del plugin "SOS Google Sync"',
+          400
+        );
         break;
       default:
-        throw new Exception('Google: Errore. Se l\'errore persiste contatta un amministratore.', 400); //TODO lingua
+        throw new Exception(
+          'Google Sync: Errore. Se l\'errore persiste contatta un amministratore.',
+          400
+        );
         break;
     }
   }
 
-  $app->enqueueMessage('Gruppo Google creato con successo.', 'message'); //TODO Language
+  $app->enqueueMessage(
+    'Gruppo Google creato con successo.',
+    'message'
+  );
 }

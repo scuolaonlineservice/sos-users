@@ -27,6 +27,8 @@ di Identity Provider (IDp) SAML per i servizi Google.
      alla pagina di Google che stava cercando di visitare.
      All'untente verrà richiesto di inserire le credenziali di Joomla!
      per poter proseguire.
+- Plugin Joomla! Google Sync:
+    - Sincronizza gli utenti Joomla! con Google.
 ##
 
 ### Installazione:
@@ -38,6 +40,7 @@ Configurare le variabili d'ambiente del container:
   1. `$ cp .env.template .env` e modificare `.env`
 ##
 
+## Modulo SAML Login
 ### Testare la soluzione localmente:
   1. Aggiungere la seguente configurazione al proprio file hosts:
 
@@ -85,3 +88,34 @@ Configurare le variabili d'ambiente del container:
   7. Caricare il certificato `googleappsidp.crt` generato in precedenza e salvare.
   8. Avviare i container con `$ docker-compose up`
   9. Per ulteriori informazioni, consultare: https://simplesamlphp.org/docs/stable/simplesamlphp-googleapps
+
+## Plugin Google Sync
+### Testare la soluzione localmente:
+  1. Installare il componente `google-sync` accedendo al pannello
+  admin di Joomla" e cliccando su:
+  `Extensions > Manage > Install > Install from folder > Check and install`
+  2. Abilitare e configurare il componente accedendo al pannello
+  admin di Joomla! e cliccando su: `Extensions > Plugins > User - SOS Google Sync`
+##
+
+### Creazione di utenti e gruppi:
+  1. Creando utenti e gruppi tramite Joomla!, ne verrà creata una copia su Google
+  in automatico.
+  Nella creazione dei gruppi, bisognerà specificare sia un nome che una mail: per
+  fare ciò, inserire nella casella `Etichetta Gruppo` il valore `nome gruppo@mail`.
+  Esempio: `Gruppo Docenti@docenti` creerà su Joomla! e su Google il gruppo `Gruppo Docenti`
+  con mail `docenti@dominioscuola.it`
+##
+
+###Credenziali Google e utilizzo in Production:
+  1. Le credenziali google sono già presenti nel sito di ogni scuola nel file `scuola/administrator/components/com_sos_users/credentials.json`.
+  Per generarne di nuove, creare un account di servizio (https://cloud.google.com/iam/docs/creating-managing-service-accounts) e
+  assegnargli gli scope `https://www.googleapis.com/auth/admin.directory.user` e `https://www.googleapis.com/auth/admin.directory.group` (https://support.google.com/a/answer/162106?hl=en)
+  2. Per utilizzare il plugin sulle scuole esistenti, sarà necessario installare le librerie
+  di Google per ogni scuola:
+  Eseguire `composer require google/apiclient:"^2.0" --ignore-platform-reqs` nella root directory del sito delle scuole.
+  3. Il sistema di gestione gruppi di questo plugin __non è__ retrocompatibile con il vecchio modulo.
+  Per ottenere la retrocompatibilità, sarà necessario rinominare i gruppi esistenti __prima__ di installare il plugin.
+  Esempio: In una scuola è presente un gruppo chiamato `Gruppo Docenti` con assegnata la mail `docenti@dominioscuola.it`
+  tramite il vecchio modulo sos_users. Per rendere questo gruppo utilizzabile con il nuovo plugin, sarà necessario
+  rinominarlo `Gruppo Docenti@docenti` prima di installare il plugin.

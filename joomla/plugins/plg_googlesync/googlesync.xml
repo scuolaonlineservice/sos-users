@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="3.1" type="plugin" group="user" method="upgrade">
-  <name>Google Sync</name>
+  <name>User - SOS Google Sync</name>
 
-  <author>Matteo Bonacini</author>
+  <author>Matteo Bonacini - Scuola Online Service</author>
   <creationDate>August 2019</creationDate>
   <authorEmail>matteo.bonacini@soluzionifutura.it</authorEmail>
-  <version>0.0.1</version>
-  <description>Sync Joomla! users with Google Suite</description>
+  <version>1.0.0</version>
+  <description>Sincronizzazione automatica di utenti e gruppi Joomla! su Google.</description>
 
   <files>
     <filename plugin="googlesync">googlesync.php</filename>
@@ -19,22 +19,22 @@
       <fieldset name="basic">
         <field
           name="auth_credentials" type="textarea"
-          description="Credenziali usate per google"
-          label="Google Service Account Credentials"
+          description="Credenziali dell'account di servizio Google da utilizzare"
+          label="Credenziali (json)"
           size="5"
-        /><!--TODO language-->
+        />
         <field
           name="user_to_impersonate" type="text"
-          default="admin@domain.it"
-          description="JFIELD_PLG_SEARCH_ALL_DESC"
-          label="JFIELD_PLG_SEARCH_ALL_LABEL"
-        /> <!--TODO language-->
+          default="admin@dominioscuola.edu.it"
+          description="Account da amministratore da utilizzare. Nella maggior parte dei casi è admin@dominioscuola.it"
+          label="Mail dell'account admin"
+        />
         <field
           name="domain" type="text"
-          default="0"
-          description="JFIELD_PLG_SEARCH_ARCHIVED_DESC"
-          label="JFIELD_PLG_SEARCH_ARCHIVED_LABEL"
-        /> <!--TODO language-->
+          default="dominioscuola.edu.it"
+          description="Dominio della scuola"
+          label="Dominio"
+        />
       </fieldset>
     </fields>
   </config>
