@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS `#__SamlLogin`;
+DROP TABLE IF EXISTS `#__LoginTokens`;
