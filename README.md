@@ -1,18 +1,20 @@
-# sos-users
+# SAML Login
 Container docker sample-scuola integrato con SimpleSAMLphp
 che permette ai siti delle scuole di svolgere la funzionalità
 di Identity Provider (IDp) SAML per i servizi Google.
 ##
 
 ###Componenti:
-- Modulo Joomla `sos-users`:
+- Modulo Joomla `SAML Login`:
     - Mostra una pagina di login agli utenti che si stanno autenticando
     con SAML, e ne gestisce il logout.
 - Authentication source di SimpleSAMLphp `JoomlaAuth`:
-    - Dirige l'utente alla pagina di login del modulo `sos-users` e
+    - Dirige l'utente alla pagina di login del modulo `SAML Login` e
      alla pagina di Google che stava cercando di visitare.
      All'untente verrà richiesto di inserire le credenziali di Joomla
      per poter proseguire.
+- Plugin Joomla! Google Sync:
+    - Sincronizza gli utenti Joomla! con Google.
 ##
 
 ###Installazione:
@@ -24,6 +26,7 @@ Configurare le variabili d'ambiente del container:
   1. `$ cp .env.template .env` e modificare `.env`
 ##
 
+##Login SAML
 ###Testare la soluzione localmente:
   1. Aggiungere la seguente configurazione al proprio file hosts:
 
@@ -35,7 +38,7 @@ Configurare le variabili d'ambiente del container:
      - http://localhost/
      - http://localhost/administrator
      - http://saml.localhost/simplesaml
-  4. È possibile installare il componente `sos-users` accedendo al pannello
+  4. È possibile installare il componente `SAML Login` accedendo al pannello
   admin di Joomla e cliccando su:
   `Extensions > Manage > Install > Install from folder > Check and install`
   5. È possibile testare il componente `JoomlaAuth` accedendo al pannello admin
@@ -50,7 +53,7 @@ Configurare le variabili d'ambiente del container:
     `googleappsidp.pem` e `googleappsidp.crt`
   2. Configurare autenticazione con Joomla:
     Modificare i campi `redirect_url` e `verify_url` nel file `config/authsources.php`.
-    `redirect_url`: Url in cui si trova la pagina di login del modulo Joomla `sos-users`.
+    `redirect_url`: Url in cui si trova la pagina di login del modulo Joomla `SAML Login`.
     (Sarà necessario sostituire a DOMAIN_NAME il dominio dell'account Google da configurare).
     `verify_url`: Url chiamato sa SimpleSAMLphp per ottenere gli attributi di un
     utente, dopo che questo si è loggato su Joomla. (Può essere necessario cambiare l'hostname
@@ -68,4 +71,19 @@ Configurare le variabili d'ambiente del container:
   8. Avviare i container con `$ docker-compose up`
   9. Per ulteriori informazioni, consultare: https://simplesamlphp.org/docs/stable/simplesamlphp-googleapps
 
-//TODO docu plg_googlesync
+##Plugin Google Sync
+###Testare la soluzione localmente:
+  1. Installare il componente `google-sync` accedendo al pannello
+  admin di Joomla" e cliccando su:
+  `Extensions > Manage > Install > Install from folder > Check and install`
+  2. Abilitare e configurare il componente accedendo al pannello
+  admin di Joomla! e cliccando su: `Extensions > Plugins > User - SOS Google Sync`
+
+###Creazione di utenti e gruppi:
+  1. Creando utenti e gruppi tramite Joomla!, ne verrà creata una copia su Google
+  in automatico.
+  Nella creazione dei gruppi, bisognerà specificare sia un nome che una mail: per
+  fare ciò, inserire nella casella `Etichetta Gruppo` il valore `nome gruppo@mail`.
+  Esempio: `Gruppo Docenti@docenti` creerà su Joomla! e su Google il gruppo `Gruppo Docenti`
+  con mail `docenti@dominioscuola.it`
+##

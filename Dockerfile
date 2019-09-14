@@ -4,8 +4,7 @@ RUN apt-get update -y && \
   apt-get install -y\
   curl\
   php7.2-dom\
-  php7.2-mbstring\
-  vim
+  php7.2-mbstring
 
 RUN wget -qO- https://simplesamlphp.org/download?latest | tar -xz -C /var &&\
   mv /var/simplesamlphp-* /var/simplesamlphp
