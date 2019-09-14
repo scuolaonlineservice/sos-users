@@ -11,18 +11,19 @@ Il container di sviluppo risponde a `localhost:8000`
 Le credenziali di amministratore (`localhost:8000/administrator`) dell'ambiente locale sono:
 - user: `admin`
 - password: `admin`
-=======
+
+# SAML Login
 Container docker sample-scuola integrato con SimpleSAMLphp
 che permette ai siti delle scuole di svolgere la funzionalità
 di Identity Provider (IDp) SAML per i servizi Google.  
 ##
 
 ###Componenti:
-- Modulo Joomla `sos-users`:
+- Modulo Joomla `SAML Login`:
     - Mostra una pagina di login agli utenti che si stanno autenticando
     con SAML, e ne gestisce il logout.
 - Authentication source di SimpleSAMLphp `JoomlaAuth`:  
-    - Dirige l'utente alla pagina di login del modulo `sos-users` e
+    - Dirige l'utente alla pagina di login del modulo `SAML Login` e
      alla pagina di Google che stava cercando di visitare.
      All'untente verrà richiesto di inserire le credenziali di Joomla
      per poter proseguire.
@@ -48,7 +49,7 @@ Configurare le variabili d'ambiente del container:
      - http://localhost/
      - http://localhost/administrator
      - http://saml.localhost/simplesaml
-  4. È possibile installare il componente `sos-users` accedendo al pannello
+  4. È possibile installare il componente `SAML Login` accedendo al pannello
   admin di Joomla e cliccando su:  
   `Extensions > Manage > Install > Install from folder > Check and install`
   5. È possibile testare il componente `JoomlaAuth` accedendo al pannello admin
@@ -63,7 +64,7 @@ Configurare le variabili d'ambiente del container:
     `googleappsidp.pem` e `googleappsidp.crt`
   2. Configurare autenticazione con Joomla:  
     Modificare i campi `redirect_url` e `verify_url` nel file `config/authsources.php`.  
-    `redirect_url`: Url in cui si trova la pagina di login del modulo Joomla `sos-users`.
+    `redirect_url`: Url in cui si trova la pagina di login del modulo Joomla `SAML Login`.
     (Sarà necessario sostituire a DOMAIN_NAME il dominio dell'account Google da configurare).  
     `verify_url`: Url chiamato sa SimpleSAMLphp per ottenere gli attributi di un
     utente, dopo che questo si è loggato su Joomla. (Può essere necessario cambiare l'hostname
