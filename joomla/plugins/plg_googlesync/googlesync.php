@@ -72,13 +72,13 @@ class plgUserGoogleSync extends JPlugin {
 
     if (!$first_name || !$family_name) {
       throw new Exception(
-        'L\'utente deve possedere nome e cognome, separati da spazio.',
+        'Google Sync: L\'utente deve possedere nome e cognome, separati da spazio.',
         403
       );
     }
     if ($new_user['password_clear'] && strlen($new_user['password_clear']) < 8) {
       throw new Exception(
-        'La password deve contenere almeno otto caratteri.',
+        'Google Sync: La password deve contenere almeno otto caratteri.',
         403
       );
     }
@@ -143,12 +143,12 @@ class plgUserGoogleSync extends JPlugin {
 
     if (!$name) {
       throw new Exception(
-        'Perfavore, assegna un nome al gruppo. (nomegruppo@email)'
+        'Google Sync: Perfavore, assegna un nome al gruppo. (nomegruppo@email)'
       );
     }
     if (!$email) {
       $this->app->enqueueMessage(
-        'Nessuna mail inserita. Il gruppo Google non verrà creato.',
+        'Google Sync: Nessuna mail inserita. Il gruppo Google non verrà creato.',
         'warning'
       );
       return;
@@ -161,7 +161,7 @@ class plgUserGoogleSync extends JPlugin {
 
       if (!$old_email) {
         throw new Exception(
-          'Impossibile aggiungere mail ad un gruppo Joomla! già esistente.'
+          'Google Sync: Impossibile aggiungere mail ad un gruppo Joomla! già esistente.'
         );
       }
 
@@ -174,7 +174,7 @@ class plgUserGoogleSync extends JPlugin {
 
     if (!$group_email) {
       $this->app->enqueueMessage(
-        'Gruppo non presente su Google: non c\'è bisogno di rimuoverlo',
+        'Google Sync: Gruppo non presente su Google: non c\'è bisogno di rimuoverlo',
         'notice'
       );
       return;

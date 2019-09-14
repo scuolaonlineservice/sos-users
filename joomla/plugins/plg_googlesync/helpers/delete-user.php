@@ -10,13 +10,13 @@ function delete_user(&$service, $user_key) {
     switch ($error->getCode()) {
       case 403:
         $app->enqueueMessage(
-          'Errore (403). Impossibile rimuovere l\'utente. Se l\'errore persiste contatta un amministratore.',
+          'Google Sync: Errore (403). Impossibile rimuovere l\'utente. Se l\'errore persiste contatta un amministratore.',
           'error'
         );
         break;
       default:
         $app->enqueueMessage(
-          'Errore . Se l\'errore persiste contatta un amministratore.',
+          'Google Sync: Errore . Se l\'errore persiste contatta un amministratore.',
           'error'
         );
         break;
@@ -26,7 +26,7 @@ function delete_user(&$service, $user_key) {
   }
 
   $app->enqueueMessage(
-    'Utente Google rimosso con successo.',
+    'Google Sync: Utente Google rimosso con successo.',
     'message'
   );
 }

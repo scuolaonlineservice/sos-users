@@ -26,7 +26,7 @@ function patch_group(&$service, $old_email, $new_name, $new_email) {
         break;
       default:
         throw new Exception(
-          'Errore. Se l\'errore persiste contatta un amministratore.',
+          'Google Sync: Errore. Se l\'errore persiste contatta un amministratore.',
           400
         );
         break;
@@ -34,7 +34,7 @@ function patch_group(&$service, $old_email, $new_name, $new_email) {
   }
 
   $app->enqueueMessage(
-    'Gruppo Google modificato con successo.',
+    'Google Sync: Gruppo Google modificato con successo.',
     'message'
   );
 }

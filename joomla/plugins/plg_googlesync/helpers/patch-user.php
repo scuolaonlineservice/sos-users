@@ -21,19 +21,19 @@ function patch_user(&$service, $old_email, $new_email, $first_name, $family_name
     switch ($error->getCode()) {
       case 403:
         throw new Exception(
-          'Impossibile creare l\'utente. Controlla di aver inserito un indirizzo email corretto.',
+          'Google Sync: Impossibile creare l\'utente. Controlla di aver inserito un indirizzo email corretto.',
           403
         );
         break;
       case 400:
         throw new Exception(
-          'Errore nei dati inseriti.',
+          'Google Sync: Errore nei dati inseriti. Controlla la configurazione del plugin "SOS Google Sync"',
           400
         );
         break;
       default:
         throw new Exception(
-          'Errore. Se l\'errore persiste contatta un amministratore.',
+          'Google Sync: Errore. Se l\'errore persiste contatta un amministratore.',
           400
         );
         break;
@@ -41,7 +41,7 @@ function patch_user(&$service, $old_email, $new_email, $first_name, $family_name
   }
 
   $app->enqueueMessage(
-    'Utente Google modificato con successo.',
+    'Google Sync: Utente Google modificato con successo.',
     'message'
   );
 }

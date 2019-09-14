@@ -11,18 +11,21 @@ function add_user_to_groups(&$service, $email, $group_emails) {
 
     try {
       $service->members->insert($group_email, $member);
-      $app->enqueueMessage('Utente aggiunto al gruppo '.$group_email.' con successo.', 'message'); //TODO language
+      $app->enqueueMessage(
+        'Google Sync: Utente aggiunto al gruppo '.$group_email.' con successo.',
+        'message'
+      );
     } catch (Google_Service_Exception $error) {
       switch ($error->getCode()) {
         case 409:
           $app->enqueueMessage(
-            'L\'utente fa già parte del gruppo '.$group_email.'.',
+            'Google Sync: L\'utente fa già parte del gruppo '.$group_email.'.',
             'warning'
           );
           break;
         default:
           $app->enqueueMessage(
-            "Impossibile aggiungere l'utente al gruppo ".$group_email.'.',
+            'Google Sync: Impossibile aggiungere l\'utente al gruppo '.$group_email.'.',
             'warning'
           );
           break;

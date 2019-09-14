@@ -8,14 +8,14 @@ function remove_user_from_groups(&$service, $email, $group_emails) {
     try {
       $service->members->delete($group_email, $email);
       $app->enqueueMessage(
-        'Utente rimosso dal gruppo '.$group_email.' con successo.',
+        'Google Sync: Utente rimosso dal gruppo '.$group_email.' con successo.',
         'message'
       );
     } catch (Google_Service_Exception $error) {
       switch ($error->getCode()) {
         default:
           $app->enqueueMessage(
-            "Impossibile rimuovere l'utente dal gruppo ".$group_email.'.',
+            'Google Sync: Impossibile rimuovere l\'utente dal gruppo '.$group_email.'.',
             'warning'
           );
           break;

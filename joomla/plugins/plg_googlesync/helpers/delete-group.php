@@ -10,13 +10,13 @@ function delete_group(&$service, $group_mail) {
     switch ($error->getCode()) {
       case 403:
         $app->enqueueMessage(
-          'Errore (403). Impossibile rimuovere il gruppo. Se l\'errore persiste contatta un amministratore.',
+          'Google Sync: Errore (403). Impossibile rimuovere il gruppo. Se l\'errore persiste contatta un amministratore.',
           'error'
         );
         break;
       default:
         $app->enqueueMessage(
-          'Errore . Se l\'errore persiste contatta un amministratore.',
+          'Google Sync: Errore . Se l\'errore persiste contatta un amministratore.',
           'error'
         );
         break;
@@ -26,7 +26,7 @@ function delete_group(&$service, $group_mail) {
   }
 
   $app->enqueueMessage(
-    'Gruppo Google rimosso con successo.',
+    'Google Sync: Gruppo Google rimosso con successo.',
     'message'
   );
 }
