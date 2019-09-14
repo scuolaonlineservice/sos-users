@@ -9,21 +9,28 @@ define('SCOPES', implode(' ', array(
 
 class plgUserGoogleSync extends JPlugin {
 
+  private $app;
+  private $auth_credentials;
+  private $user_to_impersonate;
+  private $domain;
   private $client;
   private $service;
-  private $app;
 
   public function __construct(&$subject, $config = array()) {
     parent::__construct($subject, $config);
 
+    $this->auth_credentials = json_decode($this->params->get("auth_credentials"), true);
+    $this->user_to_impersonate = $this->params->get("user_to_impersonate");
+    $this->domain = $this->params->get("domain");
+    $this->app = JFactory::getApplication();
+
     $client = new Google_Client();
-    $client->setSubject('admin@liceoariostospallanzani-re.edu.it'); //todo config
+    $client->setSubject($this->user_to_impersonate);
     $client->setScopes(SCOPES);
-    $client->setAuthConfig(JPATH_ROOT.'/plugins/user/googlesync/credentials.json'); //TODO config
+    $client->setAuthConfig($this->auth_credentials);
 
     $this->client = $client;
     $this->service = new Google_Service_Directory($this->client);
-    $this->app = JFactory::getApplication();
 
     require __DIR__.'/helpers/create-user.php';
     require __DIR__.'/helpers/patch-user.php';
@@ -33,6 +40,10 @@ class plgUserGoogleSync extends JPlugin {
     require __DIR__.'/helpers/delete-group.php';
     require __DIR__.'/helpers/add-user-to-groups.php';
     require __DIR__.'/helpers/remove-user-from-groups.php';
+
+    if (!isset($this->auth_credentials)) {
+      $this->app->enqueueMessage('credentials not set', 'warning'); //todo Language;
+    }
   }
 
   function get_group_email_by_id($id) {
@@ -70,7 +81,7 @@ class plgUserGoogleSync extends JPlugin {
       foreach ($new_user['groups'] as $group_id) {
         $group_email = $this->get_group_email_by_id($group_id);
         if ($group_email) {
-          array_push($groups, $group_email.'@liceoariostospallanzani-re.edu.it'); //TODO domain
+          array_push($groups, $group_email.'@'.$this->domain);
         }
       }
 
@@ -82,7 +93,7 @@ class plgUserGoogleSync extends JPlugin {
       foreach ($new_user['groups'] as $group_id) {
         $group_email = $this->get_group_email_by_id($group_id);
         if ($group_email) {
-          array_push($new_groups, $group_email); //TODO domain
+          array_push($new_groups, $group_email);
         }
       }
 
@@ -90,21 +101,21 @@ class plgUserGoogleSync extends JPlugin {
       foreach ($old_user['groups'] as $group_id) {
         $group_email = $this->get_group_email_by_id($group_id);
         if ($group_email) {
-          array_push($old_groups, $group_email); //TODO domain
+          array_push($old_groups, $group_email);
         }
       }
 
       $groups_to_join = [];
       foreach ($new_groups as $group_email) {
         if (!in_array($group_email, $old_groups)) {
-          array_push($groups_to_join, $group_email.'@liceoariostospallanzani-re.edu.it'); //TODO domain
+          array_push($groups_to_join, $group_email.'@'.$this->domain);
         }
       }
 
       $groups_to_leave = [];
       foreach ($old_groups as $group_email) {
         if (!in_array($group_email, $new_groups)) {
-          array_push($groups_to_leave, $group_email.'@liceoariostospallanzani-re.edu.it'); //TODO domain
+          array_push($groups_to_leave, $group_email.'@'.$this->domain);
         }
       }
 
@@ -130,7 +141,7 @@ class plgUserGoogleSync extends JPlugin {
     }
 
     if ($is_new) {
-      create_group($this->service, $name, $email.'@liceoariostospallanzani-re.edu.it'); //TODO config
+      create_group($this->service, $name, $email.'@'.$this->domain);
     } else {
       $old_email = $this->get_group_email_by_id($group['id']);
 
@@ -138,7 +149,7 @@ class plgUserGoogleSync extends JPlugin {
         throw new Exception('Impossibile aggiungere mail ad un gruppo già esistente.'); //TODO lingua
       }
 
-      patch_group($this->service, $old_email.'@liceoariostospallanzani-re.edu.it', $name, $email.'@liceoariostospallanzani-re.edu.it'); //TODO config
+      patch_group($this->service, $old_email.'@'.$this->domain, $name, $email.'@'.$this->domain);
     }
   }
 
@@ -150,6 +161,6 @@ class plgUserGoogleSync extends JPlugin {
       return;
     }
 
-    delete_group($this->service, $group_email.'@liceoariostospallanzani-re.edu.it'); //TODO config
+    delete_group($this->service, $group_email.'@'.$this->domain);
   }
 }

@@ -11,7 +11,31 @@
   <files>
     <filename plugin="googlesync">googlesync.php</filename>
     <filename>index.html</filename>
-    <filename>credentials.json</filename>
     <folder>helpers</folder>
   </files>
+
+  <config>
+    <fields name="params">
+      <fieldset name="basic">
+        <field
+          name="auth_credentials" type="textarea"
+          description="Credenziali usate per google"
+          label="Google Service Account Credentials"
+          size="5"
+        /><!--TODO language-->
+        <field
+          name="user_to_impersonate" type="text"
+          default="admin@domain.it"
+          description="JFIELD_PLG_SEARCH_ALL_DESC"
+          label="JFIELD_PLG_SEARCH_ALL_LABEL"
+        /> <!--TODO language-->
+        <field
+          name="domain" type="text"
+          default="0"
+          description="JFIELD_PLG_SEARCH_ARCHIVED_DESC"
+          label="JFIELD_PLG_SEARCH_ARCHIVED_LABEL"
+        /> <!--TODO language-->
+      </fieldset>
+    </fields>
+  </config>
 </extension>
