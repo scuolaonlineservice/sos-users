@@ -20,16 +20,28 @@ function patch_user(&$service, $old_email, $new_email, $first_name, $family_name
   } catch (Google_Service_Exception $error) {
     switch ($error->getCode()) {
       case 403:
-        throw new Exception('Impossibile creare l\'utente. Controlla di aver inserito un indirizzo email corretto.', 403); //TODO lingua
+        throw new Exception(
+          'Impossibile creare l\'utente. Controlla di aver inserito un indirizzo email corretto.',
+          403
+        );
         break;
       case 400:
-        throw new Exception('Errore nei dati inseriti.', 400);//TODO lingua
+        throw new Exception(
+          'Errore nei dati inseriti.',
+          400
+        );
         break;
       default:
-        throw new Exception('Errore. Se l\'errore persiste contatta un amministratore.', 400); //TODO lingua
+        throw new Exception(
+          'Errore. Se l\'errore persiste contatta un amministratore.',
+          400
+        );
         break;
     }
   }
 
-  $app->enqueueMessage('Utente Google modificato con successo.', 'message'); //TODO Language
+  $app->enqueueMessage(
+    'Utente Google modificato con successo.',
+    'message'
+  );
 }

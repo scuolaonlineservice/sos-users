@@ -19,9 +19,9 @@ class plgUserGoogleSync extends JPlugin {
   public function __construct(&$subject, $config = array()) {
     parent::__construct($subject, $config);
 
-    $this->auth_credentials = json_decode($this->params->get("auth_credentials"), true);
-    $this->user_to_impersonate = $this->params->get("user_to_impersonate");
-    $this->domain = $this->params->get("domain");
+    $this->auth_credentials = json_decode($this->params->get('auth_credentials'), true);
+    $this->user_to_impersonate = $this->params->get('user_to_impersonate');
+    $this->domain = $this->params->get('domain');
     $this->app = JFactory::getApplication();
 
     $client = new Google_Client();
@@ -42,7 +42,10 @@ class plgUserGoogleSync extends JPlugin {
     require __DIR__.'/helpers/remove-user-from-groups.php';
 
     if (!isset($this->auth_credentials)) {
-      $this->app->enqueueMessage('credentials not set', 'warning'); //todo Language;
+      $this->app->enqueueMessage(
+        'Credeniali per Google Sync non impostate. Disabilita il plugin o configurale prima di continuare.',
+        'error'
+      );
     }
   }
 
@@ -64,14 +67,20 @@ class plgUserGoogleSync extends JPlugin {
   }
 
   function onUserBeforeSave($old_user, $is_new, $new_user) {
-    $first_name = explode(" ", $new_user['name'], 2)[0];
-    $family_name = explode(" ", $new_user['name'], 2)[1];
+    $first_name = explode(' ', $new_user['name'], 2)[0];
+    $family_name = explode(' ', $new_user['name'], 2)[1];
 
     if (!$first_name || !$family_name) {
-      throw new Exception('L\'utente deve possedere nome e cognome, separati da spazio', 403); //TODO lingua
+      throw new Exception(
+        'L\'utente deve possedere nome e cognome, separati da spazio.',
+        403
+      );
     }
     if ($new_user['password_clear'] && strlen($new_user['password_clear']) < 8) {
-      throw new Exception('La password deve contenere almeno otto caratteri.', 403); //TODO lingua
+      throw new Exception(
+        'La password deve contenere almeno otto caratteri.',
+        403
+      );
     }
 
     if ($is_new) {
@@ -133,10 +142,15 @@ class plgUserGoogleSync extends JPlugin {
     $email = explode('@', $group['title'], 2)[1];
 
     if (!$name) {
-      throw new Exception('Perfavore, assegna un nome al gruppo.');//TODO lingua
+      throw new Exception(
+        'Perfavore, assegna un nome al gruppo. (nomegruppo@email)'
+      );
     }
     if (!$email) {
-      $this->app->enqueueMessage('Nessuna mail inserita. Il gruppo Google non verrà creato.', 'warning'); //TODO language
+      $this->app->enqueueMessage(
+        'Nessuna mail inserita. Il gruppo Google non verrà creato.',
+        'warning'
+      );
       return;
     }
 
@@ -146,7 +160,9 @@ class plgUserGoogleSync extends JPlugin {
       $old_email = $this->get_group_email_by_id($group['id']);
 
       if (!$old_email) {
-        throw new Exception('Impossibile aggiungere mail ad un gruppo già esistente.'); //TODO lingua
+        throw new Exception(
+          'Impossibile aggiungere mail ad un gruppo Joomla! già esistente.'
+        );
       }
 
       patch_group($this->service, $old_email.'@'.$this->domain, $name, $email.'@'.$this->domain);
@@ -157,7 +173,10 @@ class plgUserGoogleSync extends JPlugin {
     $group_email = explode('@', $group['title'], 2)[1];
 
     if (!$group_email) {
-      $this->app->enqueueMessage('Gruppo non presente su Google.', 'notice'); //TODO language
+      $this->app->enqueueMessage(
+        'Gruppo non presente su Google: non c\'è bisogno di rimuoverlo',
+        'notice'
+      );
       return;
     }
 
