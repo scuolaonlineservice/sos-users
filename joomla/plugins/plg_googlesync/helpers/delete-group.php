@@ -8,21 +8,25 @@ function delete_group(&$service, $group_mail) {
     $service->groups->delete($group_mail);
   } catch (Google_Service_Exception $error) {
     switch ($error->getCode()) {
-      case 403:
+      case 404:
         $app->enqueueMessage(
-          'Google Sync: Errore (403). Impossibile rimuovere il gruppo. Se l\'errore persiste contatta un amministratore.',
-          'error'
+          'Google Sync: Gruppo '.$group_email.' non esistente su Google: non verrà sincronizzato.',
+          'warning'
+        );
+        break;
+      case 403:
+        throw new Exception(
+          'Google Sync: Errore. Impossibile rimuovere il gruppo. Se l\'errore persiste contatta un amministratore.',
+          '403'
         );
         break;
       default:
-        $app->enqueueMessage(
+        throw new Exception(
           'Google Sync: Errore . Se l\'errore persiste contatta un amministratore.',
-          'error'
+          $error->getCode()
         );
         break;
     }
-
-    $app->redirect(JRoute::_('index.php?option=com_users&view=groups'), false);
   }
 
   $app->enqueueMessage(

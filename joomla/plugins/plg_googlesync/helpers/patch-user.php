@@ -34,7 +34,7 @@ function patch_user(&$service, $old_email, $new_email, $first_name, $family_name
       default:
         throw new Exception(
           'Google Sync: Errore. Se l\'errore persiste contatta un amministratore.',
-          400
+          $error->getCode()
         );
         break;
     }

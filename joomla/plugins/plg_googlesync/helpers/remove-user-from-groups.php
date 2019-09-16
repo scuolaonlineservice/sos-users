@@ -13,6 +13,12 @@ function remove_user_from_groups(&$service, $email, $group_emails) {
       );
     } catch (Google_Service_Exception $error) {
       switch ($error->getCode()) {
+        case 404:
+          $app->enqueueMessage(
+            'Google Sync: Gruppo '.$group_email.' non esistente su Google: non verrà sincronizzato.',
+            'warning'
+          );
+          break;
         default:
           $app->enqueueMessage(
             'Google Sync: Impossibile rimuovere l\'utente dal gruppo '.$group_email.'.',
