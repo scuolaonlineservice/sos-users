@@ -60,7 +60,7 @@ class plgUserGoogleSync extends JPlugin {
 
     try {
       $db->setQuery($query);
-      return explode('@', $db->loadObject()->title, 2)[1];
+      return $db->loadObject()->title;
     } catch (Exception $_) {
       return null;
     }
@@ -138,21 +138,7 @@ class plgUserGoogleSync extends JPlugin {
   }
 
   function onUserBeforeSaveGroup($_, $__, $is_new, $group) {
-    $name = explode('@', $group['title'], 2)[0];
-    $email = explode('@', $group['title'], 2)[1];
-
-    if (!$name) {
-      throw new Exception(
-        'Google Sync: Perfavore, assegna un nome al gruppo. (nomegruppo@email)'
-      );
-    }
-    if (!$email) {
-      $this->app->enqueueMessage(
-        'Google Sync: Nessuna mail inserita. Il gruppo Google non verrà creato.',
-        'warning'
-      );
-      return;
-    }
+    $email = $group['title'];
 
     if ($is_new) {
       create_group($this->service, $name, $email.'@'.$this->domain);
@@ -165,21 +151,11 @@ class plgUserGoogleSync extends JPlugin {
         );
       }
 
-      patch_group($this->service, $old_email.'@'.$this->domain, $name, $email.'@'.$this->domain);
+      patch_group($this->service, $old_email.'@'.$this->domain, $email, $email.'@'.$this->domain);
     }
   }
 
   function onUserBeforeDeleteGroup($group) {
-    $group_email = explode('@', $group['title'], 2)[1];
-
-    if (!$group_email) {
-      $this->app->enqueueMessage(
-        'Google Sync: Gruppo non presente su Google: non c\'è bisogno di rimuoverlo',
-        'notice'
-      );
-      return;
-    }
-
-    delete_group($this->service, $group_email.'@'.$this->domain);
+    delete_group($this->service, $group['title'].'@'.$this->domain);
   }
 }

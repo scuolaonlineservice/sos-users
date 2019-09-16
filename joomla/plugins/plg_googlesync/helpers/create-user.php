@@ -42,7 +42,7 @@ function create_user(&$service, $email, $first_name, $family_name, $password, $i
       default:
         throw new Exception(
           'Google Sync: Errore. Se l\'errore persiste contatta un amministratore.',
-          400
+          $error->getCode()
         );
         break;
     }

@@ -23,6 +23,12 @@ function add_user_to_groups(&$service, $email, $group_emails) {
             'warning'
           );
           break;
+        case 404:
+          $app->enqueueMessage(
+            'Google Sync: Gruppo '.$group_email.' non esistente su Google: non verrà sincronizzato.',
+            'warning'
+          );
+          break;
         default:
           $app->enqueueMessage(
             'Google Sync: Impossibile aggiungere l\'utente al gruppo '.$group_email.'.',
