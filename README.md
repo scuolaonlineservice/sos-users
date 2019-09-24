@@ -48,15 +48,16 @@ Configurare le variabili d'ambiente del container:
   3. Joomla!, Joomla! Admin e SimpleSAMLphp saranno accessibili rispettivamente a:
      - http://localhost/
      - http://localhost/administrator
-     - http://saml.localhost/simplesaml (admin@admin)
+     - http://saml.localhost/simplesaml
   4. Installare il componente `SAML Login` accedendo al pannello
   admin di Joomla! e cliccando su:  
   `Extensions > Manage > Install > Install from folder > Check and install`
-  5. Modificare il campo `redirect_url` nel file `simplesamlphp/config/authsources.php`.  
+  5. Rinominare il file `simplesamlphp/config/authsources.php.sample` a `simplesamlphp/config/authsources.php`
+  6. Modificare il campo `redirect_url` nel file `simplesamlphp/config/authsources.php`.  
     `redirect_url => http://localhost/index.php?option=com_samllogin`  
     (localhost è il dominio dell'installazione di Joomla!)
-  6. È possibile testare il componente `JoomlaAuth` accedendo al pannello admin
-  di SimpleSAMLphp e cliccando su:
+  7. È possibile testare il componente `JoomlaAuth` accedendo al pannello admin
+  di SimpleSAMLphp (credenziali: admin@admin) e cliccando su:
   `Autenticazione > Prova le fonti di autenticazione configurate > joomlamodule:JoomlaAuth`
 ##
 

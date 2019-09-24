@@ -2,6 +2,7 @@ version: '3'
 
 services:
   web:
+    container_name: sos_users
     build:
       context: .
     restart: always

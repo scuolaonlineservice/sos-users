@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-class SAMLLoginViewSAMLLogin extends JViewLegacy {
+class SAMLLoginViewSAMLLogin extends \Joomla\CMS\MVC\View\HtmlView {
   function random_str($length = 64, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
     if ($length < 1) {
       $length = 64;
@@ -19,13 +19,15 @@ class SAMLLoginViewSAMLLogin extends JViewLegacy {
     $db = JFactory::getDbo();
 
     $redirect_uri = $app->input->get('redirect_uri', false, 'STRING');
+
+    //If the user gets here without going through SimpleSAML authentication flow, we display an error
     if (!$redirect_uri) {
       $this->msg='Qualcosa è andato storto, riprova.';
       return parent::display($tpl);
     }
 
     $id = JFactory::getUser()->id;
-    if($id == 0)  {
+    if ($id === 0)  {
       $this->msg='Esegui il login con le credenziali della tua scuola per continuare.';
       return parent::display($tpl);
     }

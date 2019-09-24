@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-class SAMLLoginController extends JControllerLegacy {
+class SAMLLoginController extends \Joomla\CMS\MVC\Controller\BaseController {
   function verify_token() {
     $app = JFactory::getApplication();
     $db = JFactory::getDbo();
@@ -18,7 +18,7 @@ class SAMLLoginController extends JControllerLegacy {
     $db->setQuery($query);
     $result = $db->execute();
 
-    if ($db->getAffectedRows($result) === 0) {
+    if ($db->getAffectedRows() === 0) {
       die(json_encode([
         'message' => 'Token is incorrect.',
         'statusCode' => 403,
