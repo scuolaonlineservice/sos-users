@@ -18,7 +18,7 @@ che permette ai siti delle scuole di svolgere la funzionalità
 di Identity Provider (IDp) SAML per i servizi Google.  
 ##
 
-###Componenti:
+### Componenti:
 - Modulo Joomla! `SAML Login`:
     - Mostra una pagina di login agli utenti che si stanno autenticando
     con SAML, e ne gestisce il logout.
@@ -29,7 +29,7 @@ di Identity Provider (IDp) SAML per i servizi Google.
      per poter proseguire.
 ##
 
-###Installazione:
+### Installazione:
 Per eseguire questa applicazione sono necessari `Docker` e `docker-compose`:
   - https://docs.docker.com/install/
   - https://docs.docker.com/compose/install/
@@ -38,7 +38,7 @@ Configurare le variabili d'ambiente del container:
   1. `$ cp .env.template .env` e modificare `.env`
 ##
 
-###Testare la soluzione localmente:  
+### Testare la soluzione localmente:  
   1. Aggiungere la seguente configurazione al proprio file hosts:
     
          127.0.0.1 localhost       #(Solo se non già presente)
@@ -61,7 +61,7 @@ Configurare le variabili d'ambiente del container:
   `Autenticazione > Prova le fonti di autenticazione configurate > joomlamodule:JoomlaAuth`
 ##
 
-###Utilizzo con Google Suite:
+### Utilizzo con Google Suite:
   1. Generare i certificati RSA per SAML:  
     `sh generate-cert.sh`  
     Verranno generati due file nella cartella `cert`:  
