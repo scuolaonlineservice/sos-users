@@ -2,23 +2,14 @@
 defined('_JEXEC') or die('Restricted access');
 
 class SAMLLoginViewSAMLLogin extends \Joomla\CMS\MVC\View\HtmlView {
-  function random_str($length = 64, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
-    if ($length < 1) {
-      $length = 64;
-    }
-    $pieces = [];
-    $max = mb_strlen($keyspace, '8bit') - 1;
-    for ($i = 0; $i < $length; ++$i) {
-      $pieces []= $keyspace[random_int(0, $max)];
-    }
-    return implode('', $pieces);
-  }
-
 	function display($tpl = null) {
     $app = JFactory::getApplication();
     $db = JFactory::getDbo();
+    $input = $app->input;
 
-    $redirect_uri = $app->input->get('redirect_uri', false, 'STRING');
+    $redirect_uri =
+      $input->get('redirect_uri', false, 'STRING') ?:
+      base64_decode($input->get('redirect_uri_base64', false, 'BASE64'));
 
     //If the user gets here without going through SimpleSAML authentication flow, we display an error
     if (!$redirect_uri) {
@@ -28,11 +19,11 @@ class SAMLLoginViewSAMLLogin extends \Joomla\CMS\MVC\View\HtmlView {
 
     $id = JFactory::getUser()->id;
     if ($id === 0)  {
-      $this->msg='Esegui il login con le credenziali della tua scuola per continuare.';
-      return parent::display($tpl);
+      $redirect_url = urlencode(base64_encode("index.php?option=com_samllogin&redirect_uri_base64=" . base64_encode($redirect_uri)));
+      $app->redirect("index.php?option=com_users&view=login&return=$redirect_url",'');
     }
 
-    $token = $db->quote($this->random_str(63));
+    $token = $db->quote(JFactory::getSession()->getId());
     $exp = 'FROM_UNIXTIME('.(time() + 1 * 60).')';
 
     $columns = array('token', 'user_id', 'exp');
@@ -45,8 +36,8 @@ class SAMLLoginViewSAMLLogin extends \Joomla\CMS\MVC\View\HtmlView {
       ->values(implode(',', $values));
     $query.=
       ' ON DUPLICATE KEY UPDATE '.
-      $db->quoteName('token').' = '.$token.', '.
-      $db->quoteName('exp').' = '.$exp;
+      $db->quoteName('token')." = $token, ".
+      $db->quoteName('exp')." = $exp";
 
     $db->setQuery($query);
     $db->execute();
