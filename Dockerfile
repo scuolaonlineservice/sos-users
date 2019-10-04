@@ -11,6 +11,6 @@ RUN wget -qO- https://simplesamlphp.org/download?latest | tar -xz -C /var &&\
 
 COPY simplesamlphp /var/simplesamlphp
 
-COPY saml /etc/nginx/sites-available/saml
+COPY simplesaml.conf /etc/nginx/conf.d/simplesaml.conf
 
 RUN ln -s /etc/nginx/sites-available/saml /etc/nginx/sites-enabled/saml
