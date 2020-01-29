@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.0" method="upgrade">
+
+	<name>SOS Users</name>
+	<creationDate>August 2019</creationDate>
+	<author>Matteo Bonacini</author>
+	<authorEmail>matteo.bonacini@soluzionifutura.com</authorEmail>
+	<version>0.0.2</version>
+	<description>Handles SimpleSamlPHP authentication requests and syncs contacts with Google</description>
+
+  <install>
+    <sql>
+      <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+    </sql>
+  </install>
+  <uninstall> <!-- Runs on uninstall -->
+    <sql>
+      <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+    </sql>
+  </uninstall>
+	<update> <!-- Runs on update; New since J2.5 -->
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+
+	<files folder="site">
+		<filename>index.html</filename>
+		<filename>samllogin.php</filename>
+		<filename>controller.php</filename>
+		<folder>views</folder>
+	</files>
+
+	<administration>
+		<!-- Administration Menu Section -->
+		<menu link='index.php?option=com_samllogin'>Hello World!</menu>
+		<files folder="admin">
+			<!-- Admin Main File Copy Section -->
+			<filename>index.html</filename>
+			<filename>samllogin.php</filename>
+			<!-- SQL files section -->
+			<folder>sql</folder>
+    </files>
+	</administration>
+
+</extension>
