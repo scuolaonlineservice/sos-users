@@ -1,0 +1,9 @@
+.DS_Store
+.env
+logs
+.idea
+dev_package/packages
+dev_package/pkg_dev.xml
+*.pem
+*.crt
+simplesamlphp/config/authsources.php
