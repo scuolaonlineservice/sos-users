@@ -12,12 +12,6 @@ Le credenziali di amministratore (`localhost:8000/administrator`) dell'ambiente 
 - user: `admin`
 - password: `admin`
 
-# SAML Login
-Container docker sample-scuola integrato con SimpleSAMLphp
-che permette ai siti delle scuole di svolgere la funzionalità
-di Identity Provider (IDp) SAML per i servizi Google.
-##
-
 ### Componenti:
 - Modulo Joomla! `SAML Login`:
     - Mostra una pagina di login agli utenti che si stanno autenticando
@@ -107,7 +101,7 @@ Configurare le variabili d'ambiente del container:
   con mail `docenti@dominioscuola.it`
 ##
 
-###Credenziali Google e utilizzo in Production:
+### Credenziali Google e utilizzo in Production:
   1. Le credenziali google sono già presenti nel sito di ogni scuola nel file `scuola/administrator/components/com_sos_users/credentials.json`.
   Per generarne di nuove, creare un account di servizio (https://cloud.google.com/iam/docs/creating-managing-service-accounts) e
   assegnargli gli scope `https://www.googleapis.com/auth/admin.directory.user` e `https://www.googleapis.com/auth/admin.directory.group` (https://support.google.com/a/answer/162106?hl=en)
