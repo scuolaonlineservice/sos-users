@@ -7,3 +7,4 @@ dev_package/pkg_dev.xml
 *.pem
 *.crt
 simplesamlphp/config/authsources.php
+*credentials.json

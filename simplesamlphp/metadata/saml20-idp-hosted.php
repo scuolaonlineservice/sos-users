@@ -1,6 +1,5 @@
 <?php
 
-
 // SAML Metadata for SimpleSAMLphp (configured for Google Suite SSO)
 // No values need to be changed here (everything's already configured for Google Suite SSO)
 

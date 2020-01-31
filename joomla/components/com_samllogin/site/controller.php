@@ -56,3 +56,5 @@ class SAMLLoginController extends \Joomla\CMS\MVC\Controller\BaseController {
     $app->redirect("index.php");
   }
 }
+//TODO add logout
+//TODO add google sync
